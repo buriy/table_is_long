@@ -1,7 +1,7 @@
 import fastText
 
-from hydra import mp
-from hydra import printer
+from ..mp import mp
+from ..log.printer import PRINTER
 
 
 class FastTextModel:
@@ -36,7 +36,7 @@ class FastTextModel:
         if len(to_fetch) >= k:
             ft = mp.Runner(clazz=self.__class__, args=(self.fn, None), n=n_processes, k=k)
             try:
-                updates = ft.calc(('_predict', text) for text in printer.PRINTER.iterate(to_fetch))
+                updates = ft.calc(('_predict', text) for text in PRINTER.iterate(to_fetch))
                 for k, v in updates.items():
                     self.cache[k[1]] = v
             finally:
@@ -46,7 +46,7 @@ class FastTextModel:
 
     def predict_parallel(self, texts, n_processes=6, k=100):
         self.preload_parallel(texts, n_processes=n_processes, k=k)
-        return self.predict_all(printer.PRINTER.iterate(texts))
+        return self.predict_all(PRINTER.iterate(texts))
 
     def predict_proba(self, text):
         if text not in self.cache:

@@ -1,0 +1,1 @@
+for col in `ls -v ./$1/test/*.full`; do col=`basename $col`;col=${col/\.full/}; echo $col; done

@@ -1,47 +1,29 @@
-class NullPrinter:
-    @staticmethod
-    def iterate(x):
-        return x
+class Printer:
+    def __init__(self, verbose=False):
+        self.verbose = verbose
 
-    @staticmethod
-    def print(*x):
-        pass
+    def set_verbose(self, verbose):
+        self.verbose = verbose
 
-    @staticmethod
-    def itertuples(ds):
-        return ds.itertuples()
+    def iterate(self, x):
+        if self.verbose:
+            from .tq import tq
+            return tq(x)
+        else:
+            return x
 
+    def print(self, *x):
+        if self.verbose:
+            print(*x)
+        else:
+            print(*x)
 
-class ConsolePrinter:
-    @staticmethod
-    def iterate(x):
-        import tqdm
-        return tqdm.tqdm(x)
-
-    @staticmethod
-    def print(*x):
-        print(*x)
-
-    @staticmethod
-    def itertuples(ds):
-        import tqdm
-        return tqdm.tqdm(ds.itertuples(), total=len(ds))
+    def itertuples(self, ds):
+        if self.verbose:
+            from .tq import tq
+            return tq(ds.itertuples(), total=len(ds))
+        else:
+            return ds.itertuples()
 
 
-class NotebookPrinter:
-    @staticmethod
-    def iterate(x):
-        import tqdm
-        return tqdm.tqdm_notebook(x)
-
-    @staticmethod
-    def print(*x):
-        print(*x)
-
-    @staticmethod
-    def itertuples(ds):
-        import tqdm
-        return tqdm.tqdm_notebook(ds.itertuples(), total=len(ds))
-
-
-PRINTER = NullPrinter()
+PRINTER = Printer()

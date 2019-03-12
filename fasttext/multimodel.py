@@ -4,13 +4,13 @@ from pathlib import Path
 
 import tqdm
 
-from hydra import printer
-from hydra.ft import FastTextModel
-from hydra.labels import Labels, load_labels, save_labels
-from hydra.text.natural_sort import natural_keys
+from ..log.printer import PRINTER
+from .ft import FastTextModel
+from .labels import Labels, load_labels, save_labels
+from ..text.natural_sort import natural_keys
 
 
-class Hydra:
+class MultiModel:
     def __init__(self, root):
         self.root = Path(root)
         for p in ['train', 'test', 'results', 'models', 'reports']:
@@ -39,7 +39,7 @@ class Hydra:
             pprint.pprint(fns)
         if not fn_best.exists():
             fn_best, score_best = fns[0]
-        printer.PRINTER.print("Selected {}, accuracy={} for {}".format(fn_best, score_best or 'unknown', col))
+        PRINTER.print("Selected {}, accuracy={} for {}".format(fn_best, score_best or 'unknown', col))
         return fn_best
 
     def preload_parallel(self, texts, cols):

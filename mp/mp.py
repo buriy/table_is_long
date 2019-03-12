@@ -51,20 +51,21 @@ def _mp_process(queries):
 
 _pools = []
 PROCESSES = 6
+CHUNK = 1000
 
 
 class Runner:
-    def __init__(self, clazz, args, n=PROCESSES, k=1000):
+    def __init__(self, clazz, args, n=PROCESSES, chunk=CHUNK):
         global _pools
         self.pool = Pool(n, initializer=_mp_initialize,
                          initargs=(clazz, args))
         _pools.append(self.pool)
-        self.n = n
-        self.k = k
+        self.processes = n
+        self.chunk = chunk
 
     def calc(self, queries):
         results = {}
-        for works in groups(self.n, self.k, queries):
+        for works in groups(self.processes, self.chunk, queries):
             results_ = self.pool.map_async(_mp_process, works)
             for r in results_.get():
                 results.update(r)
